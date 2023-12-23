@@ -125,8 +125,6 @@ fn add_debt(debt: DebtPayload) -> Option<Debt> {
         created_at: time(),
     };
 
-    // Validate additional conditions if needed
-
     do_insert_debt(&debt);
     Some(debt)
 }
@@ -168,7 +166,7 @@ fn create_escrow(debt_id: u64, amount: u64) -> Result<Escrow, Error> {
 
     match DEBT_STORAGE.with(|service| service.borrow().get(&debt_id)) {
         Some(_) => {
-            let _escrow_id = ID_COUNTER
+            let escrow_id = ID_COUNTER
                 .with(|counter| {
                     let current_value = *counter.borrow().get();
                     counter.borrow_mut().set(current_value + 1)
